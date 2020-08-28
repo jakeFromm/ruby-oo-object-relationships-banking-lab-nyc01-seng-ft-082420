@@ -17,13 +17,13 @@ class Transfer
     sender.valid? && receiver.valid?
   end
 
-  def execute_transaction #This is still failing the specs and I have no idea why! The error message says it's returning nil but in pry tests it was working as specified. 
-    if valid? && receiver.balance > amount && self.status == "pending"
+  def execute_transaction 
+    if !valid? || sender.balance < amount
+      reject_transfer
+    elsif valid? && sender.balance > amount && self.status == "pending"
       sender.balance -= amount
       receiver.balance += amount
       self.status = "complete"
-    elsif !self.sender.valid? || sender.balance < amount
-      reject_transfer
     end
   end
 
